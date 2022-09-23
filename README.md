@@ -1,3 +1,3 @@
 # GamerX
 
-Desenvolvendo uma biblioteca em flask para cadastro de variados tipos de jogos.
+- Projeto em desenvolvimento no framework Flask para cadastro de variados tipos de Games.
