@@ -16,11 +16,11 @@ except mysql.connector.Error as err:
 
 cursor = conn.cursor()
 
-cursor.execute("DROP DATABASE IF EXISTS `jogoteca`;")
+cursor.execute("DROP DATABASE IF EXISTS `gamerx`;")
 
-cursor.execute("CREATE DATABASE `jogoteca`;")
+cursor.execute("CREATE DATABASE `gamerx`;")
 
-cursor.execute("USE `jogoteca`;")
+cursor.execute("USE `gamerx`;")
 
 # criando tabelas
 TABLES = {}
