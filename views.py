@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, flash, url_for
+from flask import Flask, render_template, request, redirect, session, flash, url_for, send_from_directory
 from main import app, db
 from models import Jogos, Usuarios
 
@@ -33,6 +33,10 @@ def criar():
     db.session.add(novo_jogo)
     db.session.commit()
 
+    arquivo = request.files['arquivo']
+    arquivo.save(f'uploads/{arquivo.filename}')
+
+
     return redirect(url_for('index'))
 
 @app.route('/editar/<int:id>')
@@ -51,6 +55,17 @@ def atualizar():
 
     db.session.add(jogo)
     db.session.commit()
+
+    return redirect(url_for('index'))
+
+@app.route('/deletar')
+def deletar(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        return redirect(url_for('login'))
+
+    Jogos.query.filter_by(id=id).delete()
+    db.session.commit()
+    flash('Jogo deletado com sucesso!')
 
     return redirect(url_for('index'))
 
@@ -79,6 +94,10 @@ def logout():
     session['usuario_logado'] = None
     flash('Logout efetuado com sucesso!')
     return redirect(url_for('index'))
+
+@app.route('/uploads/<nome_arquivo>')
+def imagem(nome_arquivo):
+    return send_from_directory('uploads', nome_arquivo)
 
 
 
