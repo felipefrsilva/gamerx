@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for, send_from_directory
 from main import app, db
 from models import Jogos, Usuarios
-
+from helpers import recupera_imagem
 
 
 @app.route('/')
@@ -34,7 +34,8 @@ def criar():
     db.session.commit()
 
     arquivo = request.files['arquivo']
-    arquivo.save(f'uploads/{arquivo.filename}')
+    upload_path = app.config['UPLOAD_PATH']
+    arquivo.save(f'{upload_path}/capa{novo_jogo.id}.jpg')
 
 
     return redirect(url_for('index'))
@@ -44,11 +45,12 @@ def editar(id):
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect(url_for('login', proxima=url_for('editar')))
     jogo = Jogos.query.filter_by(id=id).first()
-    return render_template('editar.html', titulo='Novo Jogo')
+    capa_jogo = recupera_imagem(id)
+    return render_template('editar.html', titulo='Editando Jogo', jogo=jogo, capa_jogo=capa_jogo)
 
-@app.route('/atualizar', methods=['POST', ])
+@app.route('/atualizar', methods=['POST',])
 def atualizar():
-    jogo = Jogos.query.filter_by(id=request.form[id]).first()
+    jogo = Jogos.query.filter_by(id=request.form['id']).first()
     jogo.nome = request.form['nome']
     jogo.categoria = request.form['categoria']
     jogo.console = request.form['console']
@@ -56,9 +58,13 @@ def atualizar():
     db.session.add(jogo)
     db.session.commit()
 
+    arquivo = request.files['arquivo']
+    upload_path = app.config['UPLOAD_PATH']
+    arquivo.save(f'{upload_path}/capa{jogo.id}.jpg')
+
     return redirect(url_for('index'))
 
-@app.route('/deletar')
+@app.route('/deletar/<int:id>')
 def deletar(id):
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect(url_for('login'))
