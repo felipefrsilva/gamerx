@@ -1,12 +1,12 @@
 import os
 from main import app
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, valodators
+from wtforms import StringField, SubmitField, validators
 
 class FormularioJogo(FlaskForm):
-    nome = StringField('Nome do Jogo', [valodators.DataRequired(), valodators.Length(min=1, max=50)])
-    categoria = StringField('Categoria', [valodators.DataRequired(), valodators.Length(min=1, max=40)])
-    console = StringField('Console', [valodators.DataRequired(), valodators.Length(min=1, max=20)])
+    nome = StringField('Nome do Jogo', [validators.DataRequired(), validators.Length(min=1, max=50)])
+    categoria = StringField('Categoria', [validators.DataRequired(), validators.Length(min=1, max=40)])
+    console = StringField('Console', [validators.DataRequired(), validators.Length(min=1, max=20)])
     salvar = SubmitField('Salvar')
 
 def recupera_imagem(id):
